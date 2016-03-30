@@ -1,0 +1,28 @@
+{
+  "name": "superlogin-client",
+  "version": "0.1.0",
+  "description": "JAvascript bindings for the SuperLogin project",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "main": "src/index.js",
+  "author": "Micky Brunetti",
+  "license": "MIT",
+  "homepage": "https://github.com/micky2be/superlogin-client",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/micky2be/superlogin-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/micky2be/superlogin-client/issues"
+  },
+  "keywords": [
+    "superlogin",
+    "login",
+    "authentication"
+  ],
+  "dependencies": {
+    "axios": "^0.9.1",
+    "events": "^1.1.0"
+  }
+}
