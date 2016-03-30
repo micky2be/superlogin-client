@@ -2,7 +2,6 @@
 
 Javascript bindings to help you build a front-end for SuperLogin applications.
 Completely based on its counter part for [AngularJS](https://github.com/colinskow/ng-superlogin) of Colin Skow.
-The source is written in ES6, you will need your application to use a transpiler like [Babel](https://babeljs.io/) to use it.
 
 For issues and feature requests visit the [issue tracker](https://github.com/micky2be/superlogin-client/issues).
 
