@@ -1,6 +1,6 @@
 {
   "name": "superlogin-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Javascript bindings for the SuperLogin project",
   "scripts": {
     "compile": "babel src --presets es2015 -d lib",
