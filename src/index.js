@@ -161,12 +161,13 @@ class Superlogin extends EventEmitter {
 		const estimatedServerTime = Date.now() + timeDiff;
 		const elapsed = estimatedServerTime - issued;
 		const ratio = elapsed / duration;
-		if ((ratio > threshold) && (typeof _refreshCB === 'function')) {
+		if ((ratio > threshold) && (typeof this._refreshCB === 'function')) {
 			this._refreshInProgress = true;
 			this._refreshCB()
-				.then(function () {
+				.then(() => {
 					this._refreshInProgress = false;
-				}, function () {
+				})
+				.catch(() => {
 					this._refreshInProgress = false;
 				});
 		}
