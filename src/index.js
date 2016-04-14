@@ -150,7 +150,7 @@ class Superlogin extends EventEmitter {
 		if (this._refreshInProgress) {
 			return Promise.resolve();
 		}
-		if (!this._session || !this._session.user_id)) {
+		if (!this._session || !this._session.user_id) {
 			return Promise.reject();
 		}
 		const issued = this._session.issued;
