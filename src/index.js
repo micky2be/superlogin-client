@@ -148,11 +148,11 @@ class Superlogin extends EventEmitter {
 	checkRefresh() {
 		// Get out if we are not authenticated or a refresh is already in progress
 		if (this._refreshInProgress || (!this._session || !this._session.user_id)) {
-			return;
+			return Promise.resolve();
 		}
 		const issued = this._session.issued;
 		const expires = this._session.expires;
-		const threshold = this._config.refreshThreshold || 0.5;
+		const threshold = isNaN(this._config.refreshThreshold) ? 0.5 : this._config.refreshThreshold;
 		const duration = expires - issued;
 		let timeDiff = this._session.serverTimeDiff || 0;
 		if (Math.abs(timeDiff) < 5000) {
@@ -163,14 +163,16 @@ class Superlogin extends EventEmitter {
 		const ratio = elapsed / duration;
 		if ((ratio > threshold) && (typeof this._refreshCB === 'function')) {
 			this._refreshInProgress = true;
-			this._refreshCB()
+			return this._refreshCB()
 				.then(() => {
 					this._refreshInProgress = false;
 				})
-				.catch(() => {
+				.catch(err => {
 					this._refreshInProgress = false;
+					throw err;
 				});
 		}
+		return Promise.resolve();
 	}
 
 	checkExpired() {
