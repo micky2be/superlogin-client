@@ -147,8 +147,11 @@ class Superlogin extends EventEmitter {
 
 	checkRefresh() {
 		// Get out if we are not authenticated or a refresh is already in progress
-		if (this._refreshInProgress || (!this._session || !this._session.user_id)) {
+		if (this._refreshInProgress) {
 			return Promise.resolve();
+		}
+		if (!this._session || !this._session.user_id)) {
+			return Promise.reject();
 		}
 		const issued = this._session.issued;
 		const expires = this._session.expires;
