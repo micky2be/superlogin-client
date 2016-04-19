@@ -62,16 +62,16 @@ class Superlogin extends EventEmitter {
 		const request = req => {
 			const config = this.getConfig();
 			const session = this.getSession();
-			if (session && session.token) {
-				this.checkRefresh();
+			if (!session || !session.token) {
+				return Promise.resolve(req);
 			}
 
-			if (checkEndpoint(req.url, config.endpoints)) {
-				if (session && session.token) {
+			return this.checkRefresh().then(() => {
+				if (checkEndpoint(req.url, config.endpoints)) {
 					req.headers.Authorization = 'Bearer ' + session.token + ':' + session.password;
 				}
-			}
-			return req;
+				return req;
+			});
 		};
 
 		const responseError = response => {
