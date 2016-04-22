@@ -48,14 +48,13 @@ class Superlogin extends EventEmitter {
 
 		// Setup the new session
 		this._session = JSON.parse(this.storage.getItem('superlogin.session'));
-		if (this._session) {
-			this._onLogin(this._session);
-		}
 
 		this._httpInterceptor();
 
 		// Check expired
-		this.checkExpired();
+		if (config.checkExpired) {
+			this.checkExpired();
+		}
 	}
 
 	_httpInterceptor() {
