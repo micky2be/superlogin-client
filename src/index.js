@@ -166,8 +166,9 @@ class Superlogin extends EventEmitter {
 		if ((ratio > threshold) && (typeof this._refreshCB === 'function')) {
 			this._refreshInProgress = true;
 			return this._refreshCB()
-				.then(() => {
+				.then((session) => {
 					this._refreshInProgress = false;
+					return session;
 				})
 				.catch(err => {
 					this._refreshInProgress = false;
