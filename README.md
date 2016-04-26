@@ -46,7 +46,7 @@ var config = {
   refreshThreshold: 0.5
 };
 ```
-Now let's inject SuperLogin into Angular and configure it...
+Now let's import SuperLogin and configure it...
 
 ```js
 import superlogin from 'superlogin-client';
