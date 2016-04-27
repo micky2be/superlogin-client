@@ -444,7 +444,7 @@ class Superlogin extends EventEmitter {
 	_oAuthPopup(url, options) {
 		return new Promise((resolve, reject) => {
 			this._oauthComplete = false;
-			options.windowName = options.windowName ||	'Social Login';
+			options.windowName = options.windowTitle ||	'Social Login';
 			options.windowOptions = options.windowOptions || 'location=0,status=0,width=800,height=600';
 			const _oauthWindow = window.open(url, options.windowName, options.windowOptions);
 			const _oauthInterval = setInterval(function () {
