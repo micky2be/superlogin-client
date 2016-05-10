@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "axios": "^0.9.1",
+    "debug-logger": "^0.4.1",
     "events": "^1.1.0"
   },
   "devDependencies": {

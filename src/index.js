@@ -1,5 +1,8 @@
 import axios from 'axios';
+import _debug from 'debug-logger';
 import { EventEmitter } from 'events';
+
+const debug = _debug('superlogin');
 
 // Capitalizes the first letter of a string
 function capitalizeFirstLetter(string) {
@@ -54,6 +57,10 @@ class Superlogin extends EventEmitter {
 		// Check expired
 		if (config.checkExpired) {
 			this.checkExpired();
+			this.validateSession()
+			.then(() => {
+				this._onLogin(this._session)
+			});
 		}
 	}
 
@@ -77,7 +84,7 @@ class Superlogin extends EventEmitter {
 			const config = this.getConfig();
 			// If there is an unauthorized error from one of our endpoints and we are logged in...
 			if (checkEndpoint(response.config.url, config.endpoints) && response.status === 401 && this.authenticated()) {
-				this.deleteSession();
+				debug.warn('Not authorized');
 				this._onLogout('Session expired');
 			}
 			return Promise.reject(response);
@@ -99,6 +106,19 @@ class Superlogin extends EventEmitter {
 		return this._config;
 	}
 
+	validateSession() {
+		return new Promise((resolve, reject) => {
+			if (!this.authenticated()) {
+				return;
+			}
+			return this._http.get(this._config.baseUrl + 'session')
+			.then(resolve)
+			.catch(() => {
+				debug.info('Session invalid');
+			});
+		});
+	}
+
 	getSession() {
 		return this._session || JSON.parse(this.storage.getItem('superlogin.session'));
 	}
@@ -106,6 +126,7 @@ class Superlogin extends EventEmitter {
 	setSession(session) {
 		this._session = session;
 		this.storage.setItem('superlogin.session', JSON.stringify(this._session));
+		debug.info('New session set');
 	}
 
 	deleteSession() {
@@ -165,13 +186,16 @@ class Superlogin extends EventEmitter {
 		const ratio = elapsed / duration;
 		if ((ratio > threshold) && (typeof this._refreshCB === 'function')) {
 			this._refreshInProgress = true;
+			debug.info('Refreshing session');
 			return this._refreshCB()
 				.then((session) => {
 					this._refreshInProgress = false;
+					debug.log('Refreshing session sucess', session);
 					return session;
 				})
 				.catch(err => {
 					this._refreshInProgress = false;
+					debug.error('Refreshing session failed', err);
 					throw err;
 				});
 		}
@@ -180,7 +204,7 @@ class Superlogin extends EventEmitter {
 
 	checkExpired() {
 		// This is not necessary if we are not authenticated
-		if (!this._session || !this._session.user_id) {
+		if (!this.authenticated()) {
 			return;
 		}
 		const expires = this._session.expires;
@@ -191,7 +215,6 @@ class Superlogin extends EventEmitter {
 		}
 		const estimatedServerTime = Date.now() + timeDiff;
 		if (estimatedServerTime > expires) {
-			this.deleteSession();
 			this._onLogout('Session expired');
 		}
 	}
@@ -219,7 +242,7 @@ class Superlogin extends EventEmitter {
 			if (session) {
 				resolve(session);
 			} else {
-				this.on('sl:login', function (newSession) {
+				this.on('login', function (newSession) {
 					resolve(newSession);
 				});
 			}
@@ -261,12 +284,10 @@ class Superlogin extends EventEmitter {
 	logout(msg) {
 		return this._http.post(this._config.baseUrl + 'logout', {})
 			.then(res => {
-				this.deleteSession();
 				this._onLogout(msg || 'Logged out');
 				return res.data;
 			})
 			.catch(err => {
-				this.deleteSession();
 				this._onLogout(msg || 'Logged out');
 				throw err.data;
 			});
@@ -275,12 +296,10 @@ class Superlogin extends EventEmitter {
 	logoutAll(msg) {
 		return this._http.post(this._config.baseUrl + 'logout-all', {})
 			.then(res => {
-				this.deleteSession();
 				this._onLogout(msg || 'Logged out');
 				return res.data;
 			})
 			.catch(err => {
-				this.deleteSession();
 				this._onLogout(msg || 'Logged out');
 				return err.data;
 			});
@@ -475,18 +494,23 @@ class Superlogin extends EventEmitter {
 	}
 
 	_onLogin(msg) {
+		debug.info('Login', msg);
 		this.emit('login', msg);
 	}
 
 	_onLogout(msg) {
+		this.deleteSession();
+		debug.info('Logout', msg);
 		this.emit('logout', msg);
 	}
 
 	_onLink(msg) {
+		debug.info('Link', msg);
 		this.emit('link', msg);
 	}
 
 	_onRefresh(msg) {
+		debug.info('Refresh', msg);
 		this.emit('refresh', msg);
 	}
 }

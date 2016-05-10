@@ -90,6 +90,9 @@ Returns a promise that is resolved as soon as the user has authenticated. If the
 ##### `superlogin.getConfig()`
 Returns the config object. (synchronous)
 
+##### `superlogin.validateSession()`
+Makes an HTTP call to verify if the current session is valid
+
 ##### `superlogin.getSession()`
 Returns the current session if the user is authenticated. (synchronous)
 
