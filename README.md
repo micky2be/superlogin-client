@@ -35,10 +35,9 @@ var config = {
   storage: 'local',
   // The authentication providers that are supported by your SuperLogin host
   providers: ['facebook', 'twitter'],
-  // Sets when to check if the session is expired. 'stateChange', 'startup' or nothing.
-  // 'stateChange' checks every time $stateChangeStart or $routeChangeStart is fired
-  // 'startup' checks just on app startup. If this is blank it will never check.
-  checkExpired: 'stateChange',
+  // Sets when to check if the session is expired. A boolean value.
+  // When set to true it will check the session on startup, on the local storage and the remote.
+  checkExpired: true,
   // A float that determines the percentage of a session duration, after which SuperLogin will automatically refresh the
   // token. For example if a token was issued at 1pm and expires at 2pm, and the threshold is 0.5, the token will
   // automatically refresh after 1:30pm. When authenticated, the token expiration is automatically checked on every
