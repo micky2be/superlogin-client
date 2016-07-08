@@ -274,6 +274,7 @@ class Superlogin extends EventEmitter {
 					this.setSession(res.data);
 					this._onLogin(res.data);
 				}
+				this._onRegister(registration);
 				return res.data;
 			})
 			.catch(err => {
@@ -507,6 +508,11 @@ class Superlogin extends EventEmitter {
 	_onLink(msg) {
 		debug.info('Link', msg);
 		this.emit('link', msg);
+	}
+
+	_onRegister(msg) {
+		debug.info('Register', msg);
+		this.emit('register', msg);
 	}
 
 	_onRefresh(msg) {
