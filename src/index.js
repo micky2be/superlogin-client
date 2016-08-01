@@ -82,6 +82,12 @@ class Superlogin extends EventEmitter {
 
 		const responseError = response => {
 			const config = this.getConfig();
+
+			// if there is not config obj in in the response it means we cannot check the endpoints. This happens for example if there is no connection at all because axion just forwards the raw error.
+			if(!('config' in response)) {
+				return Promise.reject(response);
+			}
+
 			// If there is an unauthorized error from one of our endpoints and we are logged in...
 			if (checkEndpoint(response.config.url, config.endpoints) && response.status === 401 && this.authenticated()) {
 				debug.warn('Not authorized');
@@ -262,7 +268,13 @@ class Superlogin extends EventEmitter {
 			})
 			.catch(err => {
 				this.deleteSession();
-				throw err.data;
+
+				// if no connection can be established we don't have any data thus we need to forward the original error.
+				if('data' in err) {
+					throw err.data;
+				}
+
+				throw err;
 			});
 	}
 
