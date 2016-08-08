@@ -60,6 +60,9 @@ class Superlogin extends EventEmitter {
 			this.validateSession()
 			.then(() => {
 				this._onLogin(this._session)
+			})
+			.catch(() => {
+				// ignoring
 			});
 		}
 	}
@@ -113,15 +116,13 @@ class Superlogin extends EventEmitter {
 	}
 
 	validateSession() {
-		return new Promise((resolve, reject) => {
-			if (!this.authenticated()) {
-				return;
-			}
-			return this._http.get(this._config.baseUrl + 'session')
-			.then(resolve)
-			.catch(() => {
-				debug.info('Session invalid');
-			});
+		if (!this.authenticated()) {
+			return Promise.reject();
+		}
+		return this._http.get(this._config.baseUrl + 'session')
+		.catch(err => {
+			this._onLogout('Session expired');
+			throw err.data;
 		});
 	}
 

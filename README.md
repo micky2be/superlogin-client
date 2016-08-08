@@ -35,10 +35,9 @@ var config = {
   storage: 'local',
   // The authentication providers that are supported by your SuperLogin host
   providers: ['facebook', 'twitter'],
-  // Sets when to check if the session is expired. 'stateChange', 'startup' or nothing.
-  // 'stateChange' checks every time $stateChangeStart or $routeChangeStart is fired
-  // 'startup' checks just on app startup. If this is blank it will never check.
-  checkExpired: 'stateChange',
+  // Sets when to check if the session is expired during the setup.
+  // false by default.
+  checkExpired: false,
   // A float that determines the percentage of a session duration, after which SuperLogin will automatically refresh the
   // token. For example if a token was issued at 1pm and expires at 2pm, and the threshold is 0.5, the token will
   // automatically refresh after 1:30pm. When authenticated, the token expiration is automatically checked on every
@@ -157,7 +156,7 @@ Verifies the user's email with the SuperLogin server, using the specified token.
 Makes an HTTP request to SuperLogin to send a forgot password email to the user. Authentication is not required.
 
 ##### `superlogin.resetPassword(form)`
-Forwards the supplied reset password form to SuperLogin. Must include `token`, `password`, and `confirmPassword`. The token needs to be extracted from the URL when the user clicks on the link in the password reset email.
+Forwards the supplied reset password form to SuperLogin. Must include `token`, `password`, and `confirmPassword`. The token needs to beis extracted from the URL when the user clicks on the link in the password reset email.
 
 ##### `superlogin.changePassword(form)`
 Changes the authenticated user's password, or creates one if it has not been set. If a password already exists, then `currentPassword` is required. If no password is set, then only `newPassword` and `confirmPassword` are required.
