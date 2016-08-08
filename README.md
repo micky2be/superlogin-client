@@ -11,7 +11,7 @@ For issues and feature requests visit the [issue tracker](https://github.com/mic
 - Cookie-less authentication protects your users from CSRF attacks
 - Store your authentication token in localStorage or sessionStorage
 - HTTP interceptor automatically sends an authentication token to every request to your configured endpoints
-- Automatically refreshes the token after a pre-configured portion of its duration has passed
+- Automatically refreshes the token when making a request if a pre-configured portion of its duration has passed
 - Emits events to advise your application of any changes to authentication status
 
 ## Installation
