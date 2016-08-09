@@ -303,7 +303,9 @@ class Superlogin extends EventEmitter {
 			})
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
-				throw err.data;
+				if (err.data.status !== 401) {
+					throw err.data;
+				}
 			});
 	}
 
@@ -315,7 +317,9 @@ class Superlogin extends EventEmitter {
 			})
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
-				return err.data;
+				if (err.data.status !== 401) {
+					throw err.data;
+				}
 			});
 	}
 
