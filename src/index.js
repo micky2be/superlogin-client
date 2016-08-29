@@ -460,7 +460,7 @@ class Superlogin extends EventEmitter {
 		return this._http.get(this._config.baseUrl + 'validate-username/' + encodeURIComponent(username))
 			.then(() => true)
 			.catch(function (err) {
-				return Promise.reject(err);
+				throw err.data;
 			});
 	}
 
@@ -468,7 +468,7 @@ class Superlogin extends EventEmitter {
 		return this._http.get(this._config.baseUrl + 'validate-email/' + encodeURIComponent(email))
 			.then(() => true)
 			.catch(err => {
-				return Promise.reject(err);
+				throw err.data;
 			});
 	}
 
