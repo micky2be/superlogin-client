@@ -27,7 +27,7 @@ class Superlogin extends EventEmitter {
 		this._oauthComplete = false;
 		this._config = {};
 		this._refreshCB = this.refresh;
-		this.refreshInProgress = false;
+		this._refreshInProgress = false;
 		this._http = axios.create();
 	}
 
