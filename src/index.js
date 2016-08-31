@@ -192,16 +192,13 @@ class Superlogin extends EventEmitter {
 		const elapsed = estimatedServerTime - issued;
 		const ratio = elapsed / duration;
 		if ((ratio > threshold) && (typeof this._refreshCB === 'function')) {
-			this._refreshInProgress = true;
 			debug.info('Refreshing session');
 			return this._refreshCB()
 				.then((session) => {
-					this._refreshInProgress = false;
 					debug.log('Refreshing session sucess', session);
 					return session;
 				})
 				.catch(err => {
-					this._refreshInProgress = false;
 					debug.error('Refreshing session failed', err);
 					throw err;
 				});
@@ -228,8 +225,10 @@ class Superlogin extends EventEmitter {
 
 	refresh() {
 		const session = this.getSession();
+		this._refreshInProgress = true;
 		return this._http.post(this._config.baseUrl + 'refresh', {})
 			.then(res => {
+				this._refreshInProgress = false;
 				if (res.data.token && res.data.expires) {
 					session.expires = res.data.expires;
 					session.token = res.data.token;
@@ -239,6 +238,7 @@ class Superlogin extends EventEmitter {
 				}
 			})
 			.catch(err => {
+				this._refreshInProgress = false;
 				throw err.data;
 			});
 	}
