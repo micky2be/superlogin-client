@@ -28,6 +28,7 @@ class Superlogin extends EventEmitter {
 		this._config = {};
 		this._refreshCB = this.refresh;
 		this._refreshInProgress = false;
+		this._http = null;
 	}
 
 	configure(config = {}) {
