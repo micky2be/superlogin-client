@@ -28,7 +28,7 @@ class Superlogin extends EventEmitter {
 		this._config = {};
 		this._refreshCB = this.refresh;
 		this._refreshInProgress = false;
-		this._http = null;
+		this._http = axios.create();
 	}
 
 	configure(config = {}) {
@@ -68,9 +68,6 @@ class Superlogin extends EventEmitter {
 	}
 
 	_httpInterceptor() {
-		// Create fresh axios instance, forgetting
-+		// interceptors from a previous configure call
-+		this._http = axios.create();
 		const request = req => {
 			const config = this.getConfig();
 			const session = this.getSession();
@@ -101,6 +98,9 @@ class Superlogin extends EventEmitter {
 			}
 			return Promise.reject(response);
 		};
+		// clear interceptors from a previous configure call
++		this._http.interceptors.request.handlers = [];
++		this._http.interceptors.response.handlers = [];
 
 		this._http.interceptors.request.use(request.bind(this));
 		this._http.interceptors.response.use(null, responseError.bind(this));
