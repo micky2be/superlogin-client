@@ -98,9 +98,12 @@ class Superlogin extends EventEmitter {
 			}
 			return Promise.reject(response);
 		};
+		// clear interceptors from a previous configure call
+		this._http.interceptors.request.eject(this._httpRequestInterceptor);
+		this._http.interceptors.response.eject(this._httpResponseInterceptor);
 
-		this._http.interceptors.request.use(request.bind(this));
-		this._http.interceptors.response.use(null, responseError.bind(this));
+		this._httpRequestInterceptor = this._http.interceptors.request.use(request.bind(this));
+		this._httpResponseInterceptor = this._http.interceptors.response.use(null, responseError.bind(this));
 	}
 
 	onRefresh(cb) {
