@@ -22,6 +22,7 @@
     "login",
     "authentication"
   ],
+  "typings": "./superlogin-client.d.ts"
   "dependencies": {
     "axios": "~0.14.0",
     "debug": "~2.2.0",
