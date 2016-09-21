@@ -1,8 +1,13 @@
 import axios from 'axios';
-import _debug from 'debug-logger';
+import _debug from 'debug';
 import { EventEmitter } from 'events';
 
-const debug = _debug('superlogin');
+const debug = {
+	log: _debug('superlogin:log'),
+	info: _debug('superlogin:info'),
+	warn: _debug('superlogin:warn'),
+	error: _debug('superlogin:error')
+}
 
 // Capitalizes the first letter of a string
 function capitalizeFirstLetter(string) {
