@@ -31,7 +31,6 @@ class Superlogin extends EventEmitter {
 
 		this._oauthComplete = false;
 		this._config = {};
-		this._refreshCB = this.refresh;
 		this._refreshInProgress = false;
 		this._http = axios.create();
 	}
@@ -109,10 +108,6 @@ class Superlogin extends EventEmitter {
 
 		this._httpRequestInterceptor = this._http.interceptors.request.use(request.bind(this));
 		this._httpResponseInterceptor = this._http.interceptors.response.use(null, responseError.bind(this));
-	}
-
-	onRefresh(cb) {
-		this._refreshCB = cb;
 	}
 
 	authenticated() {
@@ -199,9 +194,9 @@ class Superlogin extends EventEmitter {
 		const estimatedServerTime = Date.now() + timeDiff;
 		const elapsed = estimatedServerTime - issued;
 		const ratio = elapsed / duration;
-		if ((ratio > threshold) && (typeof this._refreshCB === 'function')) {
+		if (ratio > threshold) {
 			debug.info('Refreshing session');
-			return this._refreshCB()
+			return this.refresh()
 				.then((session) => {
 					debug.log('Refreshing session sucess', session);
 					return session;
