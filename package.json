@@ -31,5 +31,10 @@
     "babel-cli": "~6.14.0",
     "babel-plugin-add-module-exports": "~0.2.1",
     "babel-preset-es2015": "~6.14.0"
+  },
+  "jspm": {
+    "main": "src/index.js",
+    "format": "esm",
+    "registry": "npm"
   }
 }
