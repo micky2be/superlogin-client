@@ -474,9 +474,8 @@ class Superlogin extends EventEmitter {
 		// if no connection can be established we don't have any data thus we need to forward the original error.
 		if ('response' in err && 'data' in err.response) {
 			return err.response.data;
-		} else {
-			return err;
 		}
+		return err;
 	}
 
 	_oAuthPopup(url, options) {
