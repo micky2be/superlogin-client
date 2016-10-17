@@ -1,11 +1,6 @@
 import { EventEmitter2 } from 'eventemitter2';
 import { AxiosInstance } from 'axios';
-
-export interface Promise<V> {
-	then<R1, R2>(onFulfilled: (value: V) => R1 | Promise<R1>, onRejected: (error: any) => R2 | Promise<R2>): Promise<R1 | R2>;
-	then<R>(onFulfilled: (value: V) => R | Promise<R>): Promise<R>;
-	catch<R>(onRejected: (error: any) => R | Promise<R>): Promise<R>;
-}
+import { Promise } from 'es6-promise';
 
 interface SuperLoginClient extends EventEmitter2.emitter {
 	configure: (options: any) => void;
@@ -24,7 +19,7 @@ interface SuperLoginClient extends EventEmitter2.emitter {
 	checkRefresh: () => void;
 	checkExpired: () => void;
 	login: (login: { username: string, password: string }) => Promise<any>;
-	register: (register: { username: string, name?: string, email?: string, password: string, confirmPassword: string } | any) => Promise<any>;
+	register: (register: { username: string, name?: string, email?: string, password: string, confirmPassword: string, [key: string]: any }) => Promise<any>;
 	logout: (message?: string) => Promise<any>;
 	logoutAll: (message?: string) => Promise<any>;
 	logoutOthers: () => Promise<any>;
