@@ -1,6 +1,6 @@
 import axios from 'axios';
 import _debug from 'debug';
-import { EventEmitter } from 'events';
+import { EventEmitter2 } from 'eventemitter2';
 
 const debug = {
 	log: _debug('superlogin:log'),
@@ -25,7 +25,7 @@ function checkEndpoint(url, endpoints) {
 	return false;
 }
 
-class Superlogin extends EventEmitter {
+class Superlogin extends EventEmitter2 {
 	constructor() {
 		super();
 
