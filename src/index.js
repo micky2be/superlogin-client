@@ -235,6 +235,8 @@ class Superlogin extends EventEmitter2 {
 				if (res.data.token && res.data.expires) {
 					session.expires = res.data.expires;
 					session.token = res.data.token;
+					session.roles = res.data.roles;
+					session.profile = res.data.profile;
 					this.setSession(session);
 					this._onRefresh(session);
 					return session;
