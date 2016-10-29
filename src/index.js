@@ -1,6 +1,6 @@
 import axios from 'axios';
 import _debug from 'debug';
-import { EventEmitter } from 'events';
+import { EventEmitter2 } from 'eventemitter2';
 
 const debug = {
 	log: _debug('superlogin:log'),
@@ -25,7 +25,7 @@ function checkEndpoint(url, endpoints) {
 	return false;
 }
 
-class Superlogin extends EventEmitter {
+class Superlogin extends EventEmitter2 {
 	constructor() {
 		super();
 
@@ -125,7 +125,7 @@ class Superlogin extends EventEmitter {
 		return this._http.get(this._config.baseUrl + 'session')
 		.catch(err => {
 			this._onLogout('Session expired');
-			throw err.data;
+			throw this._parseError(err);
 		});
 	}
 
@@ -242,7 +242,7 @@ class Superlogin extends EventEmitter {
 			})
 			.catch(err => {
 				this._refreshInProgress = false;
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -273,12 +273,7 @@ class Superlogin extends EventEmitter {
 			.catch(err => {
 				this.deleteSession();
 
-				// if no connection can be established we don't have any data thus we need to forward the original error.
-				if('data' in err) {
-					throw err.data;
-				}
-
-				throw err;
+				throw this._parseError(err);
 			});
 	}
 
@@ -294,7 +289,7 @@ class Superlogin extends EventEmitter {
 				return res.data;
 			})
 			.catch(err => {
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -307,7 +302,7 @@ class Superlogin extends EventEmitter {
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
 				if (err.data.status !== 401) {
-					throw err.data;
+					throw this._parseError(err);
 				}
 			});
 	}
@@ -321,7 +316,7 @@ class Superlogin extends EventEmitter {
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
 				if (err.data.status !== 401) {
-					throw err.data;
+					throw this._parseError(err);
 				}
 			});
 	}
@@ -330,7 +325,7 @@ class Superlogin extends EventEmitter {
 		return this._http.post(this._config.baseUrl + 'logout-others', {})
 			.then(res => res.data)
 			.catch(err => {
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -358,7 +353,7 @@ class Superlogin extends EventEmitter {
 				return res.data;
 			})
 			.catch(err => {
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -371,7 +366,7 @@ class Superlogin extends EventEmitter {
 		return this._http.post(linkURL, { access_token: accessToken })
 			.then(res => res.data)
 			.catch(err => {
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -398,7 +393,7 @@ class Superlogin extends EventEmitter {
 			return this._http.post(this._config.baseUrl + 'unlink/' + provider)
 				.then(res => res.data)
 				.catch(err => {
-					throw err.data;
+					throw this._parseError(err);
 				});
 		}
 		return Promise.reject({ error: 'Authentication required' });
@@ -411,7 +406,7 @@ class Superlogin extends EventEmitter {
 		return this._http.get(this._config.baseUrl + 'verify-email/' + token)
 			.then(res => res.data)
 			.catch(err => {
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -419,7 +414,7 @@ class Superlogin extends EventEmitter {
 		return this._http.post(this._config.baseUrl + 'forgot-password', { email: email })
 			.then(res => res.data)
 			.catch(err => {
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -433,7 +428,7 @@ class Superlogin extends EventEmitter {
 				return res.data;
 			})
 			.catch(err => {
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -442,7 +437,7 @@ class Superlogin extends EventEmitter {
 			return this._http.post(this._config.baseUrl + 'password-change', form)
 				.then(res => res.data)
 				.catch(err => {
-					throw err.data;
+					throw this._parseError(err);
 				});
 		}
 		return Promise.reject({ error: 'Authentication required' });
@@ -453,7 +448,7 @@ class Superlogin extends EventEmitter {
 			return this._http.post(this._config.baseUrl + 'change-email', { newEmail: newEmail })
 				.then(res => res.data)
 				.catch(err => {
-					throw err.data;
+					throw this._parseError(err);
 				});
 		}
 		return Promise.reject({ error: 'Authentication required' });
@@ -463,7 +458,7 @@ class Superlogin extends EventEmitter {
 		return this._http.get(this._config.baseUrl + 'validate-username/' + encodeURIComponent(username))
 			.then(() => true)
 			.catch(function (err) {
-				throw err.data;
+				throw this._parseError(err);
 			});
 	}
 
@@ -471,8 +466,16 @@ class Superlogin extends EventEmitter {
 		return this._http.get(this._config.baseUrl + 'validate-email/' + encodeURIComponent(email))
 			.then(() => true)
 			.catch(err => {
-				throw err.data;
+				throw this._parseError(err);
 			});
+	}
+
+	_parseError(err) {
+		// if no connection can be established we don't have any data thus we need to forward the original error.
+		if ('response' in err && 'data' in err.response) {
+			return err.response.data;
+		}
+		return err;
 	}
 
 	_oAuthPopup(url, options) {
