@@ -91,7 +91,7 @@ class Superlogin extends EventEmitter2 {
 			const config = this.getConfig();
 
 			// if there is not config obj in in the response it means we cannot check the endpoints. This happens for example if there is no connection at all because axion just forwards the raw error.
-			if(!('config' in response)) {
+			if (!response || !response.config) {
 				return Promise.reject(response);
 			}
 
