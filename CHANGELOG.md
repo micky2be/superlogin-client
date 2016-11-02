@@ -1,3 +1,7 @@
+## Next
+- Handle undefined error response (by @peteruithoven)
+- Linter added
+
 ## 0.4.1
 - Updated typescript definition style
 

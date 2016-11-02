@@ -7,7 +7,7 @@ const debug = {
 	info: _debug('superlogin:info'),
 	warn: _debug('superlogin:warn'),
 	error: _debug('superlogin:error')
-}
+};
 
 // Capitalizes the first letter of a string
 function capitalizeFirstLetter(string) {
@@ -17,12 +17,20 @@ function capitalizeFirstLetter(string) {
 function checkEndpoint(url, endpoints) {
 	const parser = window.document.createElement('a');
 	parser.href = url;
-	for (let i = 0; i < endpoints.length; i++) {
+	for (let i = 0; i < endpoints.length; i += 1) {
 		if (parser.host === endpoints[i]) {
 			return true;
 		}
 	}
 	return false;
+}
+
+function parseError(err) {
+	// if no connection can be established we don't have any data thus we need to forward the original error.
+	if ('response' in err && 'data' in err.response) {
+		return err.response.data;
+	}
+	return err;
 }
 
 class Superlogin extends EventEmitter2 {
@@ -36,7 +44,7 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	configure(config = {}) {
-		config.baseUrl = config.baseUrl || '/auth/';
+		config.baseUrl = config.baseUrl || '/auth';
 		if (!config.endpoints || !(config.endpoints instanceof Array)) {
 			config.endpoints = [];
 		}
@@ -63,7 +71,7 @@ class Superlogin extends EventEmitter2 {
 			this.checkExpired();
 			this.validateSession()
 			.then(() => {
-				this._onLogin(this._session)
+				this._onLogin(this._session);
 			})
 			.catch(() => {
 				// ignoring
@@ -81,7 +89,7 @@ class Superlogin extends EventEmitter2 {
 
 			return this.checkRefresh().then(() => {
 				if (checkEndpoint(req.url, config.endpoints)) {
-					req.headers.Authorization = 'Bearer ' + session.token + ':' + session.password;
+					req.headers.Authorization = `Bearer ${session.token}:${session.password}`;
 				}
 				return req;
 			});
@@ -90,13 +98,15 @@ class Superlogin extends EventEmitter2 {
 		const responseError = response => {
 			const config = this.getConfig();
 
-			// if there is not config obj in in the response it means we cannot check the endpoints. This happens for example if there is no connection at all because axion just forwards the raw error.
+			// if there is not config obj in in the response it means we cannot check the endpoints.
+			// This happens for example if there is no connection at all because axion just forwards the raw error.
 			if (!response || !response.config) {
 				return Promise.reject(response);
 			}
 
 			// If there is an unauthorized error from one of our endpoints and we are logged in...
-			if (checkEndpoint(response.config.url, config.endpoints) && response.status === 401 && this.authenticated()) {
+			if (checkEndpoint(response.config.url, config.endpoints) &&
+				response.status === 401 && this.authenticated()) {
 				debug.warn('Not authorized');
 				this._onLogout('Session expired');
 			}
@@ -122,10 +132,10 @@ class Superlogin extends EventEmitter2 {
 		if (!this.authenticated()) {
 			return Promise.reject();
 		}
-		return this._http.get(this._config.baseUrl + 'session')
+		return this._http.get(`${this._config.baseUrl}/session`)
 		.catch(err => {
 			this._onLogout('Session expired');
-			throw this._parseError(err);
+			throw parseError(err);
 		});
 	}
 
@@ -162,14 +172,15 @@ class Superlogin extends EventEmitter2 {
 
 	confirmAnyRole(roles) {
 		if (!this._session || !this._session.roles || !this._session.roles.length) return false;
-		for (let i = 0; i < roles.length; i++) {
+		for (let i = 0; i < roles.length; i += 1) {
 			if (this._session.roles.indexOf(roles[i]) !== -1) return true;
 		}
+		return false;
 	}
 
 	confirmAllRoles(roles) {
 		if (!this._session || !this._session.roles || !this._session.roles.length) return false;
-		for (let i = 0; i < roles.length; i++) {
+		for (let i = 0; i < roles.length; i += 1) {
 			if (this._session.roles.indexOf(roles[i]) === -1) return false;
 		}
 		return true;
@@ -197,7 +208,7 @@ class Superlogin extends EventEmitter2 {
 		if (ratio > threshold) {
 			debug.info('Refreshing session');
 			return this.refresh()
-				.then((session) => {
+				.then(session => {
 					debug.log('Refreshing session sucess', session);
 					return session;
 				})
@@ -229,7 +240,7 @@ class Superlogin extends EventEmitter2 {
 	refresh() {
 		const session = this.getSession();
 		this._refreshInProgress = true;
-		return this._http.post(this._config.baseUrl + 'refresh', {})
+		return this._http.post(`${this._config.baseUrl}/refresh`, {})
 			.then(res => {
 				this._refreshInProgress = false;
 				if (res.data.token && res.data.expires) {
@@ -237,12 +248,12 @@ class Superlogin extends EventEmitter2 {
 					session.token = res.data.token;
 					this.setSession(session);
 					this._onRefresh(session);
-					return session;
 				}
+				return session;
 			})
 			.catch(err => {
 				this._refreshInProgress = false;
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
@@ -252,7 +263,7 @@ class Superlogin extends EventEmitter2 {
 			if (session) {
 				resolve(session);
 			} else {
-				this.on('login', function (newSession) {
+				this.on('login', newSession => {
 					resolve(newSession);
 				});
 			}
@@ -263,7 +274,7 @@ class Superlogin extends EventEmitter2 {
 		if (!credentials.username || !credentials.password) {
 			return Promise.reject({ error: 'Username or Password missing...' });
 		}
-		return this._http.post(this._config.baseUrl + 'login', credentials)
+		return this._http.post(`${this._config.baseUrl}/login`, credentials)
 			.then(res => {
 				res.data.serverTimeDiff = res.data.issued - Date.now();
 				this.setSession(res.data);
@@ -273,12 +284,12 @@ class Superlogin extends EventEmitter2 {
 			.catch(err => {
 				this.deleteSession();
 
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
 	register(registration) {
-		return this._http.post(this._config.baseUrl + 'register', registration)
+		return this._http.post(`${this._config.baseUrl}/register`, registration)
 			.then(res => {
 				if (res.data.user_id && res.data.token) {
 					res.data.serverTimeDiff = res.data.issued - Date.now();
@@ -289,12 +300,12 @@ class Superlogin extends EventEmitter2 {
 				return res.data;
 			})
 			.catch(err => {
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
 	logout(msg) {
-		return this._http.post(this._config.baseUrl + 'logout', {})
+		return this._http.post(`${this._config.baseUrl}/logout`, {})
 			.then(res => {
 				this._onLogout(msg || 'Logged out');
 				return res.data;
@@ -302,13 +313,13 @@ class Superlogin extends EventEmitter2 {
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
 				if (err.data.status !== 401) {
-					throw this._parseError(err);
+					throw parseError(err);
 				}
 			});
 	}
 
 	logoutAll(msg) {
-		return this._http.post(this._config.baseUrl + 'logout-all', {})
+		return this._http.post(`${this._config.baseUrl}/logout-all`, {})
 			.then(res => {
 				this._onLogout(msg || 'Logged out');
 				return res.data;
@@ -316,16 +327,16 @@ class Superlogin extends EventEmitter2 {
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
 				if (err.data.status !== 401) {
-					throw this._parseError(err);
+					throw parseError(err);
 				}
 			});
 	}
 
 	logoutOthers() {
-		return this._http.post(this._config.baseUrl + 'logout-others', {})
+		return this._http.post(`${this._config.baseUrl}/logout-others`, {})
 			.then(res => res.data)
 			.catch(err => {
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
@@ -335,7 +346,7 @@ class Superlogin extends EventEmitter2 {
 			return Promise.reject({ error: `Provider ${provider} not supported.` });
 		}
 		const url = this._config.baseUrl + provider;
-		return this._oAuthPopup(url, { windowTitle: 'Login with ' + capitalizeFirstLetter(provider) });
+		return this._oAuthPopup(url, { windowTitle: `Login with ${capitalizeFirstLetter(provider)}` });
 	}
 
 	tokenSocialAuth(provider, accessToken) {
@@ -343,8 +354,8 @@ class Superlogin extends EventEmitter2 {
 		if (providers.indexOf(provider) === -1) {
 			return Promise.reject({ error: `Provider ${provider} not supported.` });
 		}
-		return this._http.post(this._config.baseUrl + provider + '/token', { access_token: accessToken })
-			.then(function (res) {
+		return this._http.post(`${this._config.baseUrl}/${provider}/token`, { access_token: accessToken })
+			.then(res => {
 				if (res.data.user_id && res.data.token) {
 					res.data.serverTimeDiff = res.data.issued - Date.now();
 					this.setSession(res.data);
@@ -353,7 +364,7 @@ class Superlogin extends EventEmitter2 {
 				return res.data;
 			})
 			.catch(err => {
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
@@ -366,7 +377,7 @@ class Superlogin extends EventEmitter2 {
 		return this._http.post(linkURL, { access_token: accessToken })
 			.then(res => res.data)
 			.catch(err => {
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
@@ -379,7 +390,8 @@ class Superlogin extends EventEmitter2 {
 			const session = this.getSession();
 			const baseUrl = this._config.baseUrl;
 			const linkURL = `${baseUrl}link/${provider}?bearer_token=${session.token}:${session.password}`;
-			return this._oAuthPopup(linkURL, { windowTitle: 'Link your account to ' + capitalizeFirstLetter(provider) });
+			const windowTitle = `Link your account to ${capitalizeFirstLetter(provider)}`;
+			return this._oAuthPopup(linkURL, { windowTitle });
 		}
 		return Promise.reject({ error: 'Authentication required' });
 	}
@@ -390,10 +402,10 @@ class Superlogin extends EventEmitter2 {
 			return Promise.reject({ error: `Provider ${provider} not supported.` });
 		}
 		if (this.authenticated()) {
-			return this._http.post(this._config.baseUrl + 'unlink/' + provider)
+			return this._http.post(`${this._config.baseUrl}/unlink/${provider}`)
 				.then(res => res.data)
 				.catch(err => {
-					throw this._parseError(err);
+					throw parseError(err);
 				});
 		}
 		return Promise.reject({ error: 'Authentication required' });
@@ -403,23 +415,23 @@ class Superlogin extends EventEmitter2 {
 		if (!token || typeof token !== 'string') {
 			return Promise.reject({ error: 'Invalid token' });
 		}
-		return this._http.get(this._config.baseUrl + 'verify-email/' + token)
+		return this._http.get(`${this._config.baseUrl}/verify-email/${token}`)
 			.then(res => res.data)
 			.catch(err => {
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
 	forgotPassword(email) {
-		return this._http.post(this._config.baseUrl + 'forgot-password', { email: email })
+		return this._http.post(`${this._config.baseUrl}/forgot-password`, { email })
 			.then(res => res.data)
 			.catch(err => {
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
 	resetPassword(form) {
-		return this._http.post(this._config.baseUrl + 'password-reset', form)
+		return this._http.post(`${this._config.baseUrl}/password-reset`, form)
 			.then(res => {
 				if (res.data.user_id && res.data.token) {
 					this.setSession(res.data);
@@ -428,16 +440,16 @@ class Superlogin extends EventEmitter2 {
 				return res.data;
 			})
 			.catch(err => {
-				throw this._parseError(err);
+				throw parseError(err);
 			});
 	}
 
 	changePassword(form) {
 		if (this.authenticated()) {
-			return this._http.post(this._config.baseUrl + 'password-change', form)
+			return this._http.post(`${this._config.baseUrl}/password-change`, form)
 				.then(res => res.data)
 				.catch(err => {
-					throw this._parseError(err);
+					throw parseError(err);
 				});
 		}
 		return Promise.reject({ error: 'Authentication required' });
@@ -445,37 +457,29 @@ class Superlogin extends EventEmitter2 {
 
 	changeEmail(newEmail) {
 		if (this.authenticated()) {
-			return this._http.post(this._config.baseUrl + 'change-email', { newEmail: newEmail })
+			return this._http.post(`${this._config.baseUrl}/change-email`, { newEmail })
 				.then(res => res.data)
 				.catch(err => {
-					throw this._parseError(err);
+					throw parseError(err);
 				});
 		}
 		return Promise.reject({ error: 'Authentication required' });
 	}
 
 	validateUsername(username) {
-		return this._http.get(this._config.baseUrl + 'validate-username/' + encodeURIComponent(username))
+		return this._http.get(`${this._config.baseUrl}/validate-username/${encodeURIComponent(username)}`)
 			.then(() => true)
-			.catch(function (err) {
-				throw this._parseError(err);
+			.catch(err => {
+				throw parseError(err);
 			});
 	}
 
 	validateEmail(email) {
-		return this._http.get(this._config.baseUrl + 'validate-email/' + encodeURIComponent(email))
+		return this._http.get(`${this._config.baseUrl}/validate-email/${encodeURIComponent(email)}`)
 			.then(() => true)
 			.catch(err => {
-				throw this._parseError(err);
+				throw parseError(err);
 			});
-	}
-
-	_parseError(err) {
-		// if no connection can be established we don't have any data thus we need to forward the original error.
-		if ('response' in err && 'data' in err.response) {
-			return err.response.data;
-		}
-		return err;
 	}
 
 	_oAuthPopup(url, options) {
@@ -489,7 +493,7 @@ class Superlogin extends EventEmitter2 {
 					clearInterval(_oauthInterval);
 					if (!this._oauthComplete) {
 						this.authComplete = true;
-						return reject({ error: 'Authorization cancelled' });
+						reject({ error: 'Authorization cancelled' });
 					}
 				}
 			}, 500);
@@ -503,7 +507,7 @@ class Superlogin extends EventEmitter2 {
 					return resolve(session);
 				} else if (!error && link) {
 					this._onLink(link);
-					return resolve(capitalizeFirstLetter(link) + ' successfully linked.');
+					return resolve(`${capitalizeFirstLetter(link)} successfully linked.`);
 				}
 				this._oauthComplete = true;
 				return reject(error);
