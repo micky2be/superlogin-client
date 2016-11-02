@@ -4,6 +4,7 @@
   "description": "Javascript bindings for the SuperLogin project",
   "scripts": {
     "lint": "eslint --ext .js src",
+    "test": "npm run lint --silent",
     "compile": "babel src --presets es2015 -d lib",
     "prepublish": "npm run compile"
   },

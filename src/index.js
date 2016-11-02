@@ -140,7 +140,10 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	getSession() {
-		return this._session || JSON.parse(this.storage.getItem('superlogin.session'));
+		if (!this._session) {
+			this._session = JSON.parse(this.storage.getItem('superlogin.session'));
+		}
+		return this._session ? Object.assign(this._session) : null;
 	}
 
 	setSession(session) {
@@ -244,10 +247,7 @@ class Superlogin extends EventEmitter2 {
 			.then(res => {
 				this._refreshInProgress = false;
 				if (res.data.token && res.data.expires) {
-					session.expires = res.data.expires;
-					session.token = res.data.token;
-					session.roles = res.data.roles;
-					session.profile = res.data.profile;
+					Object.assign(session, res.data);
 					this.setSession(session);
 					this._onRefresh(session);
 				}

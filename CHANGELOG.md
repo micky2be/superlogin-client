@@ -1,6 +1,7 @@
 ## Next
 - Handle undefined error response (by @peteruithoven)
 - Linter added
+- Refresh session with all new data
 
 ## 0.4.1
 - Updated typescript definition style
