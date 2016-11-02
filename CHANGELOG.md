@@ -1,4 +1,4 @@
-## Next
+## 0.4.2
 - Handle undefined error response (by @peteruithoven)
 - Linter added
 - Refresh session with all new data
