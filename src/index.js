@@ -27,7 +27,7 @@ function checkEndpoint(url, endpoints) {
 
 function parseError(err) {
 	// if no connection can be established we don't have any data thus we need to forward the original error.
-	if ('response' in err && 'data' in err.response) {
+	if (err && err.response && err.response.data) {
 		return err.response.data;
 	}
 	return err;
