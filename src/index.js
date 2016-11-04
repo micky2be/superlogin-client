@@ -347,7 +347,7 @@ class Superlogin extends EventEmitter2 {
 		if (providers.indexOf(provider) === -1) {
 			return Promise.reject({ error: `Provider ${provider} not supported.` });
 		}
-		const url = this._config.baseUrl + provider;
+		const url = `${this._config.baseUrl}/${provider}`;
 		return this._oAuthPopup(url, { windowTitle: `Login with ${capitalizeFirstLetter(provider)}` });
 	}
 
@@ -375,7 +375,7 @@ class Superlogin extends EventEmitter2 {
 		if (providers.indexOf(provider) === -1) {
 			return Promise.reject({ error: `Provider ${provider} not supported.` });
 		}
-		const linkURL = `${this._config.baseUrl}link/${provider}/token`;
+		const linkURL = `${this._config.baseUrl}/link/${provider}/token`;
 		return this._http.post(linkURL, { access_token: accessToken })
 			.then(res => res.data)
 			.catch(err => {
@@ -391,7 +391,7 @@ class Superlogin extends EventEmitter2 {
 		if (this.authenticated()) {
 			const session = this.getSession();
 			const baseUrl = this._config.baseUrl;
-			const linkURL = `${baseUrl}link/${provider}?bearer_token=${session.token}:${session.password}`;
+			const linkURL = `${baseUrl}/link/${provider}?bearer_token=${session.token}:${session.password}`;
 			const windowTitle = `Link your account to ${capitalizeFirstLetter(provider)}`;
 			return this._oAuthPopup(linkURL, { windowTitle });
 		}
