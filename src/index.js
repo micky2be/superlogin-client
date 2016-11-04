@@ -45,6 +45,7 @@ class Superlogin extends EventEmitter2 {
 
 	configure(config = {}) {
 		config.baseUrl = config.baseUrl || '/auth';
+		config.baseUrl = config.baseUrl.replace(/\/$/, ''); // remove trailing /
 		if (!config.endpoints || !(config.endpoints instanceof Array)) {
 			config.endpoints = [];
 		}
