@@ -88,6 +88,10 @@ class Superlogin extends EventEmitter2 {
 				return Promise.resolve(req);
 			}
 
+			if (req.skipRefresh) {
+				return Promise.resolve(req);
+			}
+
 			return this.checkRefresh().then(() => {
 				if (checkEndpoint(req.url, config.endpoints)) {
 					req.headers.Authorization = `Bearer ${session.token}:${session.password}`;
@@ -277,7 +281,7 @@ class Superlogin extends EventEmitter2 {
 		if (!credentials.username || !credentials.password) {
 			return Promise.reject({ error: 'Username or Password missing...' });
 		}
-		return this._http.post(`${this._config.baseUrl}/login`, credentials)
+		return this._http.post(`${this._config.baseUrl}/login`, credentials, { skipRefresh: true })
 			.then(res => {
 				res.data.serverTimeDiff = res.data.issued - Date.now();
 				this.setSession(res.data);
