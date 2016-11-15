@@ -296,7 +296,7 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	register(registration) {
-		return this._http.post(`${this._config.baseUrl}/register`, registration)
+		return this._http.post(`${this._config.baseUrl}/register`, registration, { skipRefresh: true })
 			.then(res => {
 				if (res.data.user_id && res.data.token) {
 					res.data.serverTimeDiff = res.data.issued - Date.now();
@@ -430,7 +430,7 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	forgotPassword(email) {
-		return this._http.post(`${this._config.baseUrl}/forgot-password`, { email })
+		return this._http.post(`${this._config.baseUrl}/forgot-password`, { email }, { skipRefresh: true })
 			.then(res => res.data)
 			.catch(err => {
 				throw parseError(err);
@@ -438,7 +438,7 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	resetPassword(form) {
-		return this._http.post(`${this._config.baseUrl}/password-reset`, form)
+		return this._http.post(`${this._config.baseUrl}/password-reset`, form, { skipRefresh: true })
 			.then(res => {
 				if (res.data.user_id && res.data.token) {
 					this.setSession(res.data);
