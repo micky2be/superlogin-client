@@ -32,7 +32,6 @@
   ],
   "typings": "./superlogin-client.d.ts",
   "dependencies": {
-    "@types/es6-promise": "0.0.32",
     "axios": "~0.14.0",
     "debug": "~2.2.0",
     "eventemitter2": "^2.1.3"
