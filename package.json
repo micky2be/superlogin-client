@@ -1,6 +1,6 @@
 {
   "name": "superlogin-client",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Javascript bindings for the SuperLogin project",
   "scripts": {
     "lint": "eslint --ext .js src",
