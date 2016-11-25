@@ -1,3 +1,8 @@
+## 0.4.3
+- Skip refresh in register, forgotPassword and resetPassword (by @peteruithoven)
+- Delete session on unauthorized refresh (by @peteruithoven)
+- Removed es6-promise from Typescript definition to avoid conflict
+
 ## 0.4.2
 - Handle undefined error response (by @peteruithoven)
 - Linter added
