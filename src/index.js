@@ -17,7 +17,7 @@ function capitalizeFirstLetter(string) {
 function checkEndpoint(url, endpoints) {
 	const parser = window.document.createElement('a');
 	parser.href = url;
-	const host = parser.host? parser.host : window.location.host;
+	const host = parser.host ? parser.host : window.location.host;
 	for (let i = 0; i < endpoints.length; i += 1) {
 		if (host === endpoints[i]) {
 			return true;
