@@ -100,22 +100,22 @@ class Superlogin extends EventEmitter2 {
 			});
 		};
 
-		const responseError = response => {
+		const responseError = error => {
 			const config = this.getConfig();
 
-			// if there is not config obj in in the response it means we cannot check the endpoints.
+			// if there is not config obj in in the error it means we cannot check the endpoints.
 			// This happens for example if there is no connection at all because axion just forwards the raw error.
-			if (!response || !response.config) {
-				return Promise.reject(response);
+			if (!error || !error.config) {
+				return Promise.reject(error);
 			}
 
 			// If there is an unauthorized error from one of our endpoints and we are logged in...
-			if (checkEndpoint(response.config.url, config.endpoints) &&
-				response.status === 401 && this.authenticated()) {
+			if (checkEndpoint(error.config.url, config.endpoints) &&
+				error.response.status === 401 && this.authenticated()) {
 				debug.warn('Not authorized');
 				this._onLogout('Session expired');
 			}
-			return Promise.reject(response);
+			return Promise.reject(error);
 		};
 		// clear interceptors from a previous configure call
 		this._http.interceptors.request.eject(this._httpRequestInterceptor);
@@ -296,7 +296,7 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	register(registration) {
-		return this._http.post(`${this._config.baseUrl}/register`, registration)
+		return this._http.post(`${this._config.baseUrl}/register`, registration, { skipRefresh: true })
 			.then(res => {
 				if (res.data.user_id && res.data.token) {
 					res.data.serverTimeDiff = res.data.issued - Date.now();
@@ -430,7 +430,7 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	forgotPassword(email) {
-		return this._http.post(`${this._config.baseUrl}/forgot-password`, { email })
+		return this._http.post(`${this._config.baseUrl}/forgot-password`, { email }, { skipRefresh: true })
 			.then(res => res.data)
 			.catch(err => {
 				throw parseError(err);
@@ -438,7 +438,7 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	resetPassword(form) {
-		return this._http.post(`${this._config.baseUrl}/password-reset`, form)
+		return this._http.post(`${this._config.baseUrl}/password-reset`, form, { skipRefresh: true })
 			.then(res => {
 				if (res.data.user_id && res.data.token) {
 					this.setSession(res.data);

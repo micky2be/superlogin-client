@@ -1,6 +1,5 @@
 import { EventEmitter2 } from 'eventemitter2';
 import { AxiosInstance } from 'axios';
-import { Promise } from 'es6-promise';
 
 interface SuperLoginClient extends EventEmitter2.emitter {
 	configure: (options: any) => void;
