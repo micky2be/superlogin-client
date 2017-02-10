@@ -14,11 +14,16 @@ function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function checkEndpoint(url, endpoints) {
+function parseHostFromUrl(url) {
 	const parser = window.document.createElement('a');
 	parser.href = url;
+	return parser.host;
+}
+
+function checkEndpoint(url, endpoints) {
+	const host = parseHostFromUrl(url);
 	for (let i = 0; i < endpoints.length; i += 1) {
-		if (parser.host === endpoints[i]) {
+		if (host === endpoints[i]) {
 			return true;
 		}
 	}
@@ -56,7 +61,10 @@ class Superlogin extends EventEmitter2 {
 			config.endpoints = [];
 		}
 		if (!config.noDefaultEndpoint) {
-			const defaultEndpoint = config.serverUrl || window.location.host;
+			let defaultEndpoint = window.location.host;
+			if (config.serverUrl) {
+				defaultEndpoint = parseHostFromUrl(config.serverUrl);
+			}
 			config.endpoints.push(defaultEndpoint);
 		}
 		config.providers = config.providers || [];
