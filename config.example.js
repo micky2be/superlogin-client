@@ -1,5 +1,7 @@
 // Here is a tour of all the available configuration options:
 var config = {
+  // An optional URL to an external API server.
+  serverUrl: 'http://localhost:3000',
   // The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth/')
   baseUrl: '/auth/',
   // A list of API endpoints to automatically add the Authorization header to

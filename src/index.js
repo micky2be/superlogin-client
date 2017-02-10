@@ -44,13 +44,20 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	configure(config = {}) {
+		if (config.serverUrl) {
+			this._http = axios.create({
+				baseURL: config.serverUrl
+			});
+		}
+
 		config.baseUrl = config.baseUrl || '/auth';
 		config.baseUrl = config.baseUrl.replace(/\/$/, ''); // remove trailing /
 		if (!config.endpoints || !(config.endpoints instanceof Array)) {
 			config.endpoints = [];
 		}
 		if (!config.noDefaultEndpoint) {
-			config.endpoints.push(window.location.host);
+			const defaultEndpoint = config.serverUrl || window.location.host;
+			config.endpoints.push(defaultEndpoint);
 		}
 		config.providers = config.providers || [];
 
