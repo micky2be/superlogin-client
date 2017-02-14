@@ -1,6 +1,6 @@
 // Here is a tour of all the available configuration options:
 var config = {
-  // An optional URL to an external API server.
+  // An optional URL to API server, by default a current window location is used.
   serverUrl: 'http://localhost:3000',
   // The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth/')
   baseUrl: '/auth/',
