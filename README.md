@@ -56,25 +56,25 @@ superlogin.configure(config);
 
 ##### `login`
 ```js
-superlogin.on('login', function(event, session) { ... });
+superlogin.on('login', function(session) { ... });
 ```
 Session is an object that contains all the session information returned by SuperLogin, along with `serverTimeDiff`, the difference between the server clock and the local clock.
 
 ##### `logout`
 ```js
-superlogin.on('logout', function(event, message) { ... });
+superlogin.on('logout', function(message) { ... });
 ```
 Message is a message that explains why the user was logged out: 'Logged out' or 'Session expired'.
 
 ##### `refresh`
 ```js
-superlogin.on('refresh', function(event, newSession) { ... });
+superlogin.on('refresh', function(newSession) { ... });
 ```
 Broadcast when the token is refreshed.
 
 ##### `link`
 ```js
-superlogin.on('link', function(event, provider) { ... });
+superlogin.on('link', function(provider) { ... });
 ```
 Broadcast when a provider has been linked to the account.
 
