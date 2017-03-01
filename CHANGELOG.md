@@ -1,3 +1,8 @@
+## 0.5.0
+- Dispatch better error when authorization popup is blocked (by @casperlamboo)
+- Added serverUrl config option - an optional URL to an external API server (by @mnasyrov)
+- Fixed an issue with error object and the status property (by @hacorbin)
+
 ## 0.4.3
 - Skip refresh in register, forgotPassword and resetPassword (by @peteruithoven)
 - Delete session on unauthorized refresh (by @peteruithoven)
