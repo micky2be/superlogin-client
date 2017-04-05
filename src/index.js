@@ -1,6 +1,7 @@
 import axios from 'axios';
 import _debug from 'debug';
 import { EventEmitter2 } from 'eventemitter2';
+import URL from 'url-parse';
 
 const debug = {
 	log: _debug('superlogin:log'),
@@ -15,9 +16,8 @@ function capitalizeFirstLetter(string) {
 }
 
 function parseHostFromUrl(url) {
-	const parser = window.document.createElement('a');
-	parser.href = url;
-	return parser.host;
+	const parsedURL = new URL(url);
+	return parsedURL.host;
 }
 
 function checkEndpoint(url, endpoints) {
