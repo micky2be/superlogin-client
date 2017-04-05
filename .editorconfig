@@ -1,0 +1,9 @@
+# EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs
+# http://editorconfig.org
+
+root = true
+
+[*.js]
+charset = utf-8
+indent_style = tab
+trim_trailing_whitespace = true

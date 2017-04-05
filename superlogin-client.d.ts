@@ -18,7 +18,7 @@ interface SuperLoginClient extends EventEmitter2.emitter {
 	checkRefresh: () => void;
 	checkExpired: () => void;
 	login: (login: { username: string, password: string }) => Promise<any>;
-	register: (register: { username: string, name?: string, email?: string, password: string, confirmPassword: string, [key: string]: any }) => Promise<any>;
+	register: (register: { username?: string, name?: string, email?: string, password: string, confirmPassword: string, [key: string]: any }) => Promise<any>;
 	logout: (message?: string) => Promise<any>;
 	logoutAll: (message?: string) => Promise<any>;
 	logoutOthers: () => Promise<any>;

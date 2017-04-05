@@ -24,6 +24,8 @@ Here is a tour of all the available configuration options:
 
 ```js
 var config = {
+  // An optional URL to API server, by default a current window location is used.
+  serverUrl: 'http://localhost:3000',
   // The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth/')
   baseUrl: '/auth/',
   // A list of API endpoints to automatically add the Authorization header to
@@ -56,25 +58,25 @@ superlogin.configure(config);
 
 ##### `login`
 ```js
-superlogin.on('login', function(event, session) { ... });
+superlogin.on('login', function(session) { ... });
 ```
 Session is an object that contains all the session information returned by SuperLogin, along with `serverTimeDiff`, the difference between the server clock and the local clock.
 
 ##### `logout`
 ```js
-superlogin.on('logout', function(event, message) { ... });
+superlogin.on('logout', function(message) { ... });
 ```
 Message is a message that explains why the user was logged out: 'Logged out' or 'Session expired'.
 
 ##### `refresh`
 ```js
-superlogin.on('refresh', function(event, newSession) { ... });
+superlogin.on('refresh', function(newSession) { ... });
 ```
 Broadcast when the token is refreshed.
 
 ##### `link`
 ```js
-superlogin.on('link', function(event, provider) { ... });
+superlogin.on('link', function(provider) { ... });
 ```
 Broadcast when a provider has been linked to the account.
 
