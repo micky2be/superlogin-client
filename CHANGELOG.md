@@ -1,4 +1,4 @@
-## 0.5.1
+## 0.5.1-0.5.2
 - Using url-parse to parse host for better compatibility (by @peteruithoven)
 - The username property is also optional in Typescript definition (by @EuAndreh)
 - Added a memoryStorage fallback for private browsing
