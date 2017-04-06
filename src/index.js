@@ -75,7 +75,8 @@ class Superlogin extends EventEmitter2 {
 	configure(config = {}) {
 		if (config.serverUrl) {
 			this._http = axios.create({
-				baseURL: config.serverUrl
+				baseURL: config.serverUrl,
+				timeout: config.timeout
 			});
 		}
 
@@ -92,6 +93,7 @@ class Superlogin extends EventEmitter2 {
 			config.endpoints.push(defaultEndpoint);
 		}
 		config.providers = config.providers || [];
+		config.timeout = config.timeout || 0;
 
 		if (!isStorageAvailable()) {
 			this.storage = memoryStorage;
