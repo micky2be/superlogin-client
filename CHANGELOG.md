@@ -1,3 +1,8 @@
+## 0.5.1
+- Using url-parse to parse host for better compatibility (by @peteruithoven)
+- The username property is also optional in Typescript definition (by @EuAndreh)
+- Added a memoryStorage fallback for private browsing
+
 ## 0.5.0
 - Dispatch better error when authorization popup is blocked (by @casperlamboo)
 - Added serverUrl config option - an optional URL to an external API server (by @mnasyrov)

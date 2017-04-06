@@ -1,6 +1,7 @@
 import axios from 'axios';
 import _debug from 'debug';
 import { EventEmitter2 } from 'eventemitter2';
+import URL from 'url-parse';
 
 const debug = {
 	log: _debug('superlogin:log'),
@@ -15,9 +16,8 @@ function capitalizeFirstLetter(string) {
 }
 
 function parseHostFromUrl(url) {
-	const parser = window.document.createElement('a');
-	parser.href = url;
-	return parser.host;
+	const parsedURL = new URL(url);
+	return parsedURL.host;
 }
 
 function checkEndpoint(url, endpoints) {
@@ -29,6 +29,16 @@ function checkEndpoint(url, endpoints) {
 	}
 	return false;
 }
+function isStorageAvailable() {
+	const mod = '__STORAGE__';
+	try {
+		localStorage.setItem(mod, mod);
+		localStorage.removeItem(mod);
+		return true;
+	} catch (e) {
+		return false;
+	}
+}
 
 function parseError(err) {
 	// if no connection can be established we don't have any data thus we need to forward the original error.
@@ -37,6 +47,20 @@ function parseError(err) {
 	}
 	return err;
 }
+
+const memoryStorage = {
+	setItem: (key, value) => {
+		memoryStorage.storage.set(key, value);
+	},
+	getItem: key => {
+		const value = memoryStorage.storage.get(key);
+		if (typeof value !== 'undefined') {
+			return value;
+		}
+		return null;
+	},
+	storage: new Map()
+};
 
 class Superlogin extends EventEmitter2 {
 	constructor() {
@@ -69,7 +93,9 @@ class Superlogin extends EventEmitter2 {
 		}
 		config.providers = config.providers || [];
 
-		if (config.storage === 'session') {
+		if (!isStorageAvailable) {
+			this.storage = memoryStorage;
+		} else if (config.storage === 'session') {
 			this.storage = window.sessionStorage;
 		} else {
 			this.storage = window.localStorage;
