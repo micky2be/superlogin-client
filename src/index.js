@@ -93,7 +93,7 @@ class Superlogin extends EventEmitter2 {
 		}
 		config.providers = config.providers || [];
 
-		if (!isStorageAvailable) {
+		if (!isStorageAvailable()) {
 			this.storage = memoryStorage;
 		} else if (config.storage === 'session') {
 			this.storage = window.sessionStorage;
