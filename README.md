@@ -44,7 +44,11 @@ var config = {
   // token. For example if a token was issued at 1pm and expires at 2pm, and the threshold is 0.5, the token will
   // automatically refresh after 1:30pm. When authenticated, the token expiration is automatically checked on every
   // request. You can do this manually by calling superlogin.checkRefresh(). Default: 0.5
-  refreshThreshold: 0.5
+  refreshThreshold: 0.5,
+  // The number of milliseconds before a request times out
+  // If the request takes longer than `timeout`, the request will be aborted.
+  // Default is 0, meaning it won't timeout.
+  timeout: 0
 };
 ```
 Now let's import SuperLogin and configure it...
