@@ -154,7 +154,7 @@ class Superlogin extends EventEmitter2 {
 
 			// If there is an unauthorized error from one of our endpoints and we are logged in...
 			if (checkEndpoint(error.config.url, config.endpoints) &&
-				error.response.status === 401 && this.authenticated()) {
+				error.response &&	error.response.status === 401 && this.authenticated()) {
 				debug.warn('Not authorized');
 				this._onLogout('Session expired');
 			}
@@ -362,7 +362,7 @@ class Superlogin extends EventEmitter2 {
 			})
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
-				if (err.response.data.status !== 401) {
+				if (!err.response || (err.response && err.response.data.status !== 401)) {
 					throw parseError(err);
 				}
 			});
@@ -376,7 +376,7 @@ class Superlogin extends EventEmitter2 {
 			})
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
-				if (err.response.data.status !== 401) {
+				if (!err.response || (err.response && err.response.data.status !== 401)) {
 					throw parseError(err);
 				}
 			});
