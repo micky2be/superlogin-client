@@ -154,7 +154,7 @@ class Superlogin extends EventEmitter2 {
 
 			// If there is an unauthorized error from one of our endpoints and we are logged in...
 			if (checkEndpoint(error.config.url, config.endpoints) &&
-				error.response &&	error.response.status === 401 && this.authenticated()) {
+				error.response && error.response.status === 401 && this.authenticated()) {
 				debug.warn('Not authorized');
 				this._onLogout('Session expired');
 			}
