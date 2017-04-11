@@ -362,7 +362,7 @@ class Superlogin extends EventEmitter2 {
 			})
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
-				if (!err.response || (err.response && err.response.data.status !== 401)) {
+				if (!err.response || err.response.data.status !== 401) {
 					throw parseError(err);
 				}
 			});
@@ -376,7 +376,7 @@ class Superlogin extends EventEmitter2 {
 			})
 			.catch(err => {
 				this._onLogout(msg || 'Logged out');
-				if (!err.response || (err.response && err.response.data.status !== 401)) {
+				if (!err.response || err.response.data.status !== 401) {
 					throw parseError(err);
 				}
 			});
