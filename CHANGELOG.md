@@ -1,3 +1,6 @@
+## 0.5.3
+- Added a custom timeout option to Axios request (by @peteruithoven)
+
 ## 0.5.1-0.5.2
 - Using url-parse to parse host for better compatibility (by @peteruithoven)
 - The username property is also optional in Typescript definition (by @EuAndreh)
