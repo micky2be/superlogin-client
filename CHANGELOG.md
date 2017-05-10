@@ -1,3 +1,6 @@
+## 0.5.4
+- Added a way to specify a different endpoint for social auth/link
+
 ## 0.5.3
 - Added a custom timeout option to Axios request (by @peteruithoven)
 

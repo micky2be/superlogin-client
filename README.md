@@ -26,8 +26,10 @@ Here is a tour of all the available configuration options:
 var config = {
   // An optional URL to API server, by default a current window location is used.
   serverUrl: 'http://localhost:3000',
-  // The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth/')
-  baseUrl: '/auth/',
+  // The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth')
+  baseUrl: '/auth',
+  // Specific endpoint for social authentication and social link popups (defaults to `${location.origin}${baseUrl}`)
+  socialUrl: 'http://localhost:3001/auth'
   // A list of API endpoints to automatically add the Authorization header to
   // By default the host the browser is pointed to will be added automatically
   endpoints: ['api.example.com'],

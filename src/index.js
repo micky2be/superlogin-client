@@ -82,6 +82,9 @@ class Superlogin extends EventEmitter2 {
 
 		config.baseUrl = config.baseUrl || '/auth';
 		config.baseUrl = config.baseUrl.replace(/\/$/, ''); // remove trailing /
+		config.socialUrl = config.baseUrl;
+		config.socialUrl = config.socialUrl.replace(/\/$/, ''); // remove trailing /
+
 		if (!config.endpoints || !(config.endpoints instanceof Array)) {
 			config.endpoints = [];
 		}
@@ -395,7 +398,7 @@ class Superlogin extends EventEmitter2 {
 		if (providers.indexOf(provider) === -1) {
 			return Promise.reject({ error: `Provider ${provider} not supported.` });
 		}
-		const url = `${this._config.baseUrl}/${provider}`;
+		const url = `${this._config.socialUrl}/${provider}`;
 		return this._oAuthPopup(url, { windowTitle: `Login with ${capitalizeFirstLetter(provider)}` });
 	}
 
@@ -438,8 +441,8 @@ class Superlogin extends EventEmitter2 {
 		}
 		if (this.authenticated()) {
 			const session = this.getSession();
-			const baseUrl = this._config.baseUrl;
-			const linkURL = `${baseUrl}/link/${provider}?bearer_token=${session.token}:${session.password}`;
+			const token = `bearer_token=${session.token}:${session.password}`;
+			const linkURL = `${this._config.socialUrl}/link/${provider}?${token}`;
 			const windowTitle = `Link your account to ${capitalizeFirstLetter(provider)}`;
 			return this._oAuthPopup(linkURL, { windowTitle });
 		}
