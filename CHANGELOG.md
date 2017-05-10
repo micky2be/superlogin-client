@@ -1,3 +1,6 @@
+## 0.6.0
+- Added Session and ConfigurationOptions types (by @polco)
+
 ## 0.5.4
 - Added a way to specify a different endpoint for social auth/link
 
