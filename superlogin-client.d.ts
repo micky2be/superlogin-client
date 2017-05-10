@@ -1,19 +1,44 @@
 import { EventEmitter2 } from 'eventemitter2';
 import { AxiosInstance } from 'axios';
 
-interface SuperLoginClient extends EventEmitter2.emitter {
-	configure: (options: any) => void;
+export type Session = {
+	expires: number,
+	ip: string,
+	password: string,
+	provider: string,
+	roles: string[],
+	serverTimeDiff: number,
+	token: string,
+	userDBs: { [db: string]: string },
+	user_id: string
+}
+
+export type ConfigurationOptions = {
+	serverUrl?: string,
+	baseUrl?: string,
+	socialUrl?: string,
+	endpoints?: string[],
+	noDefaultEndpoint?: boolean,
+	storage?: string,
+	providers?: string[],
+	checkExpired?: boolean,
+	refreshThreshold?: number,
+	timeout?: number
+}
+
+export interface SuperLoginClient extends EventEmitter2.emitter {
+	configure: (options: ConfigurationOptions) => void;
 	authenticated: () => boolean;
 	authenticate: () => Promise<any>;
-	getConfig: () => any;
+	getConfig: () => ConfigurationOptions;
 	validateSession: () => void;
-	getSession: () => any;
-	setSession: (session: any) => void;
+	getSession: () => Session;
+	setSession: (session: Session) => void;
 	deleteSession: () => void;
 	getDbUrl: (dbName: string) => string;
 	confirmRole: (role: string) => boolean;
-	confirmAnyRole: (possibleRoles: Array<string>) => boolean;
-	confirmAllRoles: (requiredRoles: Array<string>) => boolean;
+	confirmAnyRole: (possibleRoles: string[]) => boolean;
+	confirmAllRoles: (requiredRoles: string[]) => boolean;
 	refresh: () => void;
 	checkRefresh: () => void;
 	checkExpired: () => void;
@@ -37,5 +62,6 @@ interface SuperLoginClient extends EventEmitter2.emitter {
 	getHttp: () => AxiosInstance;
 }
 
+export as namespace SuperLogin;
 declare const client: SuperLoginClient;
 export default client;
