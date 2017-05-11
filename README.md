@@ -1,5 +1,7 @@
 # SuperLogin-client
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/micky2be/superlogin-client.svg)](https://greenkeeper.io/)
+
 Javascript bindings to help you build a front-end for SuperLogin applications.
 Completely based on its counter part for [AngularJS](https://github.com/colinskow/ng-superlogin) of Colin Skow.
 
