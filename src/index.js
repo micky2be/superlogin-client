@@ -248,7 +248,8 @@ class Superlogin extends EventEmitter2 {
 		if (!this._session || !this._session.user_id) {
 			return Promise.reject();
 		}
-		const refreshed = this._session.refreshed;
+		// try getting the latest refresh date, if not available fall back to issued date
+		const refreshed = this._session.refreshed || this._session.issued;
 		const expires = this._session.expires;
 		const threshold = isNaN(this._config.refreshThreshold) ? 0.5 : this._config.refreshThreshold;
 		const duration = expires - refreshed;
