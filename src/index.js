@@ -248,16 +248,16 @@ class Superlogin extends EventEmitter2 {
 		if (!this._session || !this._session.user_id) {
 			return Promise.reject();
 		}
-		const issued = this._session.issued;
+		const refreshed = this._session.refreshed;
 		const expires = this._session.expires;
 		const threshold = isNaN(this._config.refreshThreshold) ? 0.5 : this._config.refreshThreshold;
-		const duration = expires - issued;
+		const duration = expires - refreshed;
 		let timeDiff = this._session.serverTimeDiff || 0;
 		if (Math.abs(timeDiff) < 5000) {
 			timeDiff = 0;
 		}
 		const estimatedServerTime = Date.now() + timeDiff;
-		const elapsed = estimatedServerTime - issued;
+		const elapsed = estimatedServerTime - refreshed;
 		const ratio = elapsed / duration;
 		if (ratio > threshold) {
 			debug.info('Refreshing session');
