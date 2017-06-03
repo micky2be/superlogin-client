@@ -59,7 +59,12 @@ Now let's import SuperLogin and configure it...
 import superlogin from 'superlogin-client';
 superlogin.configure(config);
 ```
-
+Then we can do an initial session check:
+```js
+superlogin.refresh()
+  .then(session => console.log(`Refreshed session: `, session))
+  .catch(err => console.log(`Couldn\'t refresh token: `, err))
+```
 ## Events
 
 ##### `login`
