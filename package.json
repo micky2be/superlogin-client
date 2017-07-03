@@ -32,17 +32,17 @@
   ],
   "typings": "./superlogin-client.d.ts",
   "dependencies": {
-    "axios": "~0.16.1",
-    "debug": "~2.2.0",
-    "eventemitter2": "^2.1.3",
+    "axios": "~0.16.2",
+    "debug": "~2.6.8",
+    "eventemitter2": "^4.1.0",
     "url-parse": "^1.1.8"
   },
   "devDependencies": {
-    "babel-cli": "~6.18.0",
+    "babel-cli": "~6.24.0",
     "babel-plugin-add-module-exports": "~0.2.1",
-    "babel-preset-es2015": "~6.18.0",
-    "eslint": "^3.9.1",
-    "eslint-config-airbnb-base": "^9.0.0",
+    "babel-preset-es2015": "~6.24.0",
+    "eslint": "^4.1.1",
+    "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.0.1",
     "pre-commit": "^1.1.3"
   }

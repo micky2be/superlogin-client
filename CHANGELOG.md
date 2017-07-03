@@ -1,3 +1,10 @@
+## 0.7.0
+- Updated dependencies
+
+## 0.6.1
+- Checking refresh using refreshed date (by @peteruithoven)
+- Fixed `socialUrl` option being overwritten (by @atoumbre)
+
 ## 0.6.0
 - Added Session and ConfigurationOptions types (by @polco)
 
