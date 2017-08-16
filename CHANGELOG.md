@@ -1,3 +1,6 @@
+## 0.8.0
+- Added custom username and password field (by @ThonyFD)
+
 ## 0.7.1
 - Added removeItem to the memoryStorage
 

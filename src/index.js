@@ -83,6 +83,12 @@ class Superlogin extends EventEmitter2 {
 			});
 		}
 
+		// @ThonyFD: To support custom username and password field
+		if (config.local) {
+			config.local.usernameField = config.local.usernameField || 'username';
+			config.local.passwordField = config.local.passwordField || 'password';
+		}
+
 		config.baseUrl = config.baseUrl || '/auth';
 		config.baseUrl = config.baseUrl.replace(/\/$/, ''); // remove trailing /
 		config.socialUrl = config.socialUrl || config.baseUrl;
@@ -328,7 +334,8 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	login(credentials) {
-		if (!credentials.username || !credentials.password) {
+		// @ThonyFD: To support custom username and password field
+		if (!credentials[this._config.local.usernameField] || !credentials[this._config.local.passwordField]) {
 			return Promise.reject({ error: 'Username or Password missing...' });
 		}
 		return this._http.post(`${this._config.baseUrl}/login`, credentials, { skipRefresh: true })
