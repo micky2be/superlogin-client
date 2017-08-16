@@ -1,3 +1,6 @@
+## 0.7.1
+- Added removeItem to the memoryStorage
+
 ## 0.7.0
 - Updated dependencies
 

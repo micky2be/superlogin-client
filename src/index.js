@@ -59,6 +59,9 @@ const memoryStorage = {
 		}
 		return null;
 	},
+	removeItem: key => {
+		memoryStorage.storage.delete(key);
+	},
 	storage: new Map()
 };
 
