@@ -26,7 +26,7 @@ export type ConfigurationOptions = {
 	timeout?: number
 }
 
-export interface SuperLoginClient extends EventEmitter2.emitter {
+export interface SuperLoginClient extends EventEmitter2 {
 	configure: (options: ConfigurationOptions) => void;
 	authenticated: () => boolean;
 	authenticate: () => Promise<any>;
