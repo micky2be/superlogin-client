@@ -1,5 +1,5 @@
-import { EventEmitter2 } from 'eventemitter2';
-import { AxiosInstance } from 'axios';
+import {EventEmitter2} from 'eventemitter2';
+import {AxiosInstance} from 'axios';
 
 export type Session = {
 	expires: number,
@@ -9,7 +9,7 @@ export type Session = {
 	roles: string[],
 	serverTimeDiff: number,
 	token: string,
-	userDBs: { [db: string]: string },
+	userDBs: {[db: string]: string},
 	user_id: string
 }
 
@@ -23,7 +23,11 @@ export type ConfigurationOptions = {
 	providers?: string[],
 	checkExpired?: boolean,
 	refreshThreshold?: number,
-	timeout?: number
+	timeout?: number,
+	local?: {
+		usernameField?: string,
+		passwordField?: string
+	}
 }
 
 export interface SuperLoginClient extends EventEmitter2 {
@@ -42,8 +46,8 @@ export interface SuperLoginClient extends EventEmitter2 {
 	refresh: () => void;
 	checkRefresh: () => void;
 	checkExpired: () => void;
-	login: (login: { username: string, password: string }) => Promise<any>;
-	register: (register: { username?: string, name?: string, email?: string, password: string, confirmPassword: string, [key: string]: any }) => Promise<any>;
+	login: (login: {username: string, password: string}) => Promise<any>;
+	register: (register: {username?: string, name?: string, email?: string, password: string, confirmPassword: string, [key: string]: any}) => Promise<any>;
 	logout: (message?: string) => Promise<any>;
 	logoutAll: (message?: string) => Promise<any>;
 	logoutOthers: () => Promise<any>;
@@ -54,8 +58,8 @@ export interface SuperLoginClient extends EventEmitter2 {
 	unlink: (provider: string) => Promise<any>;
 	verifyEmail: (token: string) => Promise<any>;
 	forgotPassword: (email: string) => Promise<any>;
-	resetPassword: (reset: { password: string, confirmPassword: string, token: string }) => Promise<any>;
-	changePassword: (change: { currentPassword?: string, newPassword: string, confirmPassword: string, token: string }) => Promise<any>;
+	resetPassword: (reset: {password: string, confirmPassword: string, token: string}) => Promise<any>;
+	changePassword: (change: {currentPassword?: string, newPassword: string, confirmPassword: string, token: string}) => Promise<any>;
 	changeEmail: (email: string) => Promise<any>;
 	validateUsername: (username: string) => Promise<any>;
 	validateEmail: (email: string) => Promise<any>;
@@ -65,3 +69,5 @@ export interface SuperLoginClient extends EventEmitter2 {
 export as namespace SuperLogin;
 declare const client: SuperLoginClient;
 export default client;
+
+
