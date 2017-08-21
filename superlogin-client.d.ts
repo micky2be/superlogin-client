@@ -23,7 +23,10 @@ export type ConfigurationOptions = {
 	providers?: string[],
 	checkExpired?: boolean,
 	refreshThreshold?: number,
-	timeout?: number
+	timeout?: number,
+	local?: {
+		usernameField?: string,
+		passwordField?: string
 }
 
 export interface SuperLoginClient extends EventEmitter2 {

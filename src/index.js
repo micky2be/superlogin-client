@@ -87,6 +87,9 @@ class Superlogin extends EventEmitter2 {
 		config.baseUrl = config.baseUrl.replace(/\/$/, ''); // remove trailing /
 		config.socialUrl = config.socialUrl || config.baseUrl;
 		config.socialUrl = config.socialUrl.replace(/\/$/, ''); // remove trailing /
+		config.local = config.local || {};
+		config.local.usernameField = config.local.usernameField || 'username';
+		config.local.passwordField = config.local.passwordField || 'password';
 
 		if (!config.endpoints || !(config.endpoints instanceof Array)) {
 			config.endpoints = [];
@@ -328,7 +331,8 @@ class Superlogin extends EventEmitter2 {
 	}
 
 	login(credentials) {
-		if (!credentials.username || !credentials.password) {
+		const { usernameField, passwordField } = this._config.local;
+		if (!credentials[usernameField] || !credentials[passwordField]) {
 			return Promise.reject({ error: 'Username or Password missing...' });
 		}
 		return this._http.post(`${this._config.baseUrl}/login`, credentials, { skipRefresh: true })
