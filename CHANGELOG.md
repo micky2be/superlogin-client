@@ -1,3 +1,7 @@
+## 0.7.2
+- Fixed typescript declaration file with the update of eventemitter2 (by @polco)
+- Added support of custom field for authentication (by @ThonyFD)
+
 ## 0.7.1
 - Added removeItem to the memoryStorage
 
