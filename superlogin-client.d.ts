@@ -27,6 +27,7 @@ export type ConfigurationOptions = {
 	local?: {
 		usernameField?: string,
 		passwordField?: string
+	}
 }
 
 export interface SuperLoginClient extends EventEmitter2 {
