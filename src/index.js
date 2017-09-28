@@ -472,11 +472,11 @@ class Superlogin extends EventEmitter2 {
 		return Promise.reject({ error: 'Authentication required' });
 	}
 
-	verifyEmail(token) {
+	confirmEmail(token) {
 		if (!token || typeof token !== 'string') {
 			return Promise.reject({ error: 'Invalid token' });
 		}
-		return this._http.get(`${this._config.baseUrl}/verify-email/${token}`)
+		return this._http.get(`${this._config.baseUrl}/confirm-email/${token}`)
 			.then(res => res.data)
 			.catch(err => {
 				throw parseError(err);
