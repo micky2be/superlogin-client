@@ -157,7 +157,7 @@ Link a provider using an access_token obtained by the client. Returns a promise.
 ##### `superlogin.unlink(provider)`
 Unlinks the specified provider from the user's account. Returns a promise.
 
-##### `superlogin.verifyEmail(token)`
+##### `superlogin.confirmEmail(token)`
 Verifies the user's email with the SuperLogin server, using the specified token. Returns a promise. Authentication is not required. The token will be a URL parameter passed in when the user clicks on the confirmation link in the email sent by the system. Your app needs to manually extract the token from the URL and pass it in here.
 
 ##### `superlogin.forgotPassword(email)`
