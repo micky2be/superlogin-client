@@ -4,6 +4,8 @@ const config = {
 	serverUrl: 'http://localhost:3000',
 	// The base URL for the SuperLogin routes with leading and trailing slashes (defaults to '/auth/')
 	baseUrl: '/auth/',
+	// An optional URL for social auth/link, by default equals to `baseUrl`
+	socialUrl: 'http://localhost:3001/social',
 	// A list of API endpoints to automatically add the Authorization header to
 	// By default the host the browser is pointed to will be added automatically
 	endpoints: ['api.example.com'],

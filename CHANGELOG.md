@@ -1,3 +1,6 @@
+## 0.8.0
+- Rightfully changed the API verifyEmail to confirmEnail (by @SteffenDE)
+
 ## 0.7.2
 - Fixed typescript declaration file with the update of eventemitter2 (by @polco)
 - Added support of custom field for authentication (by @ThonyFD)

@@ -92,7 +92,8 @@ Broadcast when a provider has been linked to the account.
 Returns true if the user is currently authenticated; otherwise false. (synchronous)
 
 ##### `superlogin.authenticate()`
-Returns a promise that is resolved as soon as the user has authenticated. If the user never authenticates, this promise will stay waiting forever.
+Returns a promise that is resolved as soon as the user has authenticated.
+If the user never authenticates, this promise will stay waiting forever.
 
 ##### `superlogin.getConfig()`
 Returns the config object. (synchronous)
@@ -125,31 +126,44 @@ Makes an HTTP call to refresh the access token.
 Checks if the session has exceeded the refresh threshold, and calls refresh if necessary
 
 ##### `superlogin.checkExpired()`
-Checks if the session has expired and logs out if the access token is no longer valid. Accounts for server time difference.
+Checks if the session has expired and logs out if the access token is no longer valid. 
+Accounts for server time difference.
 
 ##### `superlogin.login(credentials)`
-Passes credentials to the server to log the user in. Returns a promise that resolves with session information upon successful login, or rejects with an error message if login fails. The credentials object must contain `username` and `password`.
+Passes credentials to the server to log the user in.
+Returns a promise that resolves with session information upon successful login, or rejects with an error message if login fails.
+The credentials object must contain `username` and `password`.
 
 ##### `superlogin.register(registration)`
-Passes the registration form to SuperLogin to create a new user. Returns a promise. If the sever returns session information the user is automatically logged in.
+Passes the registration form to SuperLogin to create a new user. Returns a promise.
+If the sever returns session information the user is automatically logged in.
 
 ##### `superlogin.logout(message)`
-Logs out the current session and returns a promise. Deletes the session and resolves the promise no matter what. The optional `message` will be broadcast with the 'sl:logout' event.
+Logs out the current session and returns a promise.
+Deletes the session and resolves the promise no matter what.
+The optional `message` will be broadcast with the 'sl:logout' event.
 
 ##### `superlogin.logoutAll(message)`
-Logs out ALL the user's open sessions and returns a promise. Deletes the session and resolves the promise no matter what. The optional `message` will be broadcast with the 'sl:logout' event.
+Logs out ALL the user's open sessions and returns a promise.
+Deletes the session and resolves the promise no matter what.
+The optional `message` will be broadcast with the 'sl:logout' event.
 
 ##### `superlogin.logoutOthers()`
 Logs out all the user's open sessions EXCEPT the current one. Returns a promise.
 
 ##### `superlogin.socialAuth(provider)`
-Opens a popup window to authenticate the specified provider. Returns a promise that is rejected if authentication fails, or the popup is closed prematurely. Also rejects if the provider is not present in the `providers` list in the config.
+Opens a popup window to authenticate the specified provider.
+Returns a promise that is rejected if authentication fails, or the popup is closed prematurely.
+Also rejects if the provider is not present in the `providers` list in the config.
 
 ##### `superlogin.tokenSocialAuth(provider, accessToken)`
-Login using an access_token obtained by the client for the specified provider. This is useful for PhoneGap and native plugins. Rejects if the provider is not present in the `providers` list in the config.
+Login using an access_token obtained by the client for the specified provider.
+This is useful for PhoneGap and native plugins.
+Rejects if the provider is not present in the `providers` list in the config.
 
 ##### `superlogin.link(provider)`
-Opens a popup window to link provider to the already authenticated user. Returns a promise that will reject if the user is not authenticated, the popup is closed prematurely, or the link fails.
+Opens a popup window to link provider to the already authenticated user.
+Returns a promise that will reject if the user is not authenticated, the popup is closed prematurely, or the link fails.
 
 ##### `superlogin.tokenLink(provider, accessToken)`
 Link a provider using an access_token obtained by the client. Returns a promise.
@@ -158,22 +172,31 @@ Link a provider using an access_token obtained by the client. Returns a promise.
 Unlinks the specified provider from the user's account. Returns a promise.
 
 ##### `superlogin.confirmEmail(token)`
-Verifies the user's email with the SuperLogin server, using the specified token. Returns a promise. Authentication is not required. The token will be a URL parameter passed in when the user clicks on the confirmation link in the email sent by the system. Your app needs to manually extract the token from the URL and pass it in here.
+Verifies the user's email with the SuperLogin server, using the specified token.
+Returns a promise. Authentication is not required.
+The token will be a URL parameter passed in when the user clicks on the confirmation link in the email sent by the system.
+Your app needs to manually extract the token from the URL and pass it in here.
 
 ##### `superlogin.forgotPassword(email)`
 Makes an HTTP request to SuperLogin to send a forgot password email to the user. Authentication is not required.
 
 ##### `superlogin.resetPassword(form)`
-Forwards the supplied reset password form to SuperLogin. Must include `token`, `password`, and `confirmPassword`. The token needs to beis extracted from the URL when the user clicks on the link in the password reset email.
+Forwards the supplied reset password form to SuperLogin. Must include `token`, `password`, and `confirmPassword`.
+The token needs to beis extracted from the URL when the user clicks on the link in the password reset email.
 
 ##### `superlogin.changePassword(form)`
-Changes the authenticated user's password, or creates one if it has not been set. If a password already exists, then `currentPassword` is required. If no password is set, then only `newPassword` and `confirmPassword` are required.
+Changes the authenticated user's password, or creates one if it has not been set.
+If a password already exists, then `currentPassword` is required. 
+If no password is set, then only `newPassword` and `confirmPassword` are required.
 
 ##### `superlogin.changeEmail(newEmail)`
-Changes the authenticated user's email. If email confirmation is enabled, a new confirm email will go out, and the email will not be changed until the new address is confirmed.
+Changes the authenticated user's email.
+If email confirmation is enabled, a new confirm email will go out, and the email will not be changed until the new address is confirmed.
 
 ##### `superlogin.logoutAll(message)`
-Logs out ALL the user's open sessions and returns a promise. Deletes the session and resolves the promise no matter what. The optional `message` will be broadcast with the 'sl:logout' event.
+Logs out ALL the user's open sessions and returns a promise.
+Deletes the session and resolves the promise no matter what.
+The optional `message` will be broadcast with the 'sl:logout' event.
 
 ##### `superlogin.validateUsername(username)`
 Returns a promise that will resolve if the username is valid and not currently in use, or reject otherwise.
