@@ -32,7 +32,7 @@
   ],
   "typings": "./superlogin-client.d.ts",
   "dependencies": {
-    "axios": "~0.16.2",
+    "axios": "~0.21.3",
     "debug": "~2.6.8",
     "eventemitter2": "^4.1.0",
     "url-parse": "^1.1.8"
